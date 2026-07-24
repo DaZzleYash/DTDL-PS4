@@ -6,8 +6,8 @@ from app.finance.seed_rules import build_example_rules, seed_rules
 
 __all__ = [
     "EXPECTED_DECISIONS",
-    "LoanApplicationContext",
     "SAMPLE_REQUESTS",
+    "LoanApplicationContext",
     "build_example_rules",
     "seed_rules",
 ]

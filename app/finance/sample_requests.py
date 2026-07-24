@@ -10,11 +10,11 @@ does not win before the intended rule.
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import UTC, datetime
 
 
 def _years_ago(years: int) -> str:
-    today = date.today()
+    today = datetime.now(UTC).date()
     try:
         cutoff = today.replace(year=today.year - years)
     except ValueError:
