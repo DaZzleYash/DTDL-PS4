@@ -28,6 +28,5 @@ data/
 .coverage
 htmlcov/
 
-# OS
-.DS_Store
-Thumbs.db
+# Frontend
+frontend/
