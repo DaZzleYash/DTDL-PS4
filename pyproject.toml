@@ -1,7 +1,7 @@
 [project]
 name = "finance-decision-engine"
 version = "0.1.0"
-description = "Loan & Credit Decisioning Engine — PS4 Configurable Decision Automation Platform"
+description = "Configurable Decision Automation Platform — finance is the reference demo domain"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

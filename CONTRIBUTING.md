@@ -53,6 +53,11 @@ Until other modules land, use mocks/stubs in tests:
 - **C** can mock `RuleRepository` and `ConditionEvaluatorRegistry` in tests
 - **D** can write schemas and sample data immediately; seed script execution waits for B+C
 
+## Domain Modules
+
+Reference domains live under `app/domains/<name>/`. Finance is the hackathon demo.
+Adding a new domain (e.g. `insurance/`) should not require changes to `engine/`, `rules/`, or `decisions/`.
+
 ## Questions?
 
 Tag the module owner in your PR or team chat.

@@ -27,8 +27,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Finance Decision Engine",
     description=(
-        "Configurable Decision Automation Platform — evaluates loan/credit "
-        "applications against configurable rules and returns explainable decisions."
+        "Configurable Decision Automation Platform — evaluates structured requests "
+        "against configurable rules. Finance is the reference demo domain."
     ),
     version="0.1.0",
     lifespan=lifespan,
