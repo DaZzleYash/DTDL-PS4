@@ -20,6 +20,10 @@ class RuleUpdate(RuleCreate):
     pass
 
 
+class RuleActiveUpdate(BaseModel):
+    active: bool
+
+
 class RuleOut(RuleCreate):
     id: int
     version: int

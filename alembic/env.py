@@ -8,8 +8,7 @@ from sqlalchemy import engine_from_config, pool
 from app.core.config import settings
 from app.core.database import Base
 
-# Import models here as they are created (Contributor B adds Rule model):
-# from app.rules.models import Rule  # noqa: F401
+from app.rules.models import Rule  # noqa: F401
 
 config = context.config
 
