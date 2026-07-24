@@ -3,7 +3,13 @@
 **PS4 — Configurable Decision Automation Platform**  
 Deutsche Telekom Digital Labs · The Talent Hack (Build Sprint)
 
+<<<<<<< Updated upstream
 A modular decision automation platform built with Python 3.12 and FastAPI. Structured JSON requests are evaluated against **configurable rules** stored in a database, and the service returns an explainable decision with a full audit trace.
+=======
+A **Configurable Decision Automation Platform** built with Python 3.12 and FastAPI (PS4 — The Talent Hack). Structured requests are evaluated against **configurable rules** stored in a database, and the service returns an explainable decision.
+
+**Finance (loan/credit)** is the reference demo domain under `app/domains/finance/`. The core engine is domain-agnostic — the same platform can serve insurance, HR, logistics, or any other vertical by adding a new folder under `app/domains/`.
+>>>>>>> Stashed changes
 
 Finance (loan/credit) is the reference demo domain under `app/finance/`. The core engine is domain-agnostic.
 
@@ -27,11 +33,19 @@ All five modules are integrated on `main`:
 
 | Rule | Outcome | Priority |
 |---|---|---|
+<<<<<<< Updated upstream
 | Minimum Credit Score | APPROVE | 10 |
 | High Debt-to-Income Flag | MANUAL_REVIEW | 20 |
 | VIP Existing Customer Fast Track | APPROVE | 25 |
 | Prior Default Block | REJECT | 30 |
 | Underage Applicant Block | REJECT | 40 |
+=======
+| **A** | Rules Engine Core | `app/engine/` |
+| **B** | Rule Management & Persistence | `app/rules/` |
+| **C** | Decision Engine & API | `app/decisions/` |
+| **D** | Domain Examples (finance demo) | `app/domains/finance/` |
+| **E** | Platform, Infra & Integration | `app/core/`, `docker/`, CI |
+>>>>>>> Stashed changes
 
 See `app/finance/rule_catalog.md` for plain-English descriptions.
 
@@ -176,6 +190,7 @@ curl -X POST http://localhost:8000/api/decisions/evaluate/bulk `
 
 ## Running Tests
 
+<<<<<<< Updated upstream
 ```powershell
 # Full suite
 pytest
@@ -189,6 +204,15 @@ pytest tests/integration      # end-to-end HTTP stack (E)
 
 # Lint
 ruff check app tests
+=======
+```bash
+pytest                        # all tests
+pytest tests/integration      # platform / health / exception tests
+pytest tests/engine           # Contributor A
+pytest tests/rules            # Contributor B
+pytest tests/decisions        # Contributor C
+pytest tests/domains/finance   # Contributor D (finance demo)
+>>>>>>> Stashed changes
 ```
 
 Integration tests seed finance rules in-memory and hit the real HTTP routes — no running server required.
@@ -205,8 +229,14 @@ DTDL-PS4/
 │   ├── schemas/                # shared contracts (B, C, E)
 │   ├── engine/                 # JSON condition interpreter (A)
 │   ├── rules/                  # rule CRUD + persistence (B)
+<<<<<<< Updated upstream
 │   ├── decisions/              # evaluation algorithm + API (C)
 │   └── finance/                # demo domain: seeds, samples, catalog (D)
+=======
+│   ├── decisions/              # decision algorithm + API (C)
+│   └── domains/                # reference domain examples (D)
+│       └── finance/            # loan/credit demo vertical slice
+>>>>>>> Stashed changes
 ├── tests/
 │   ├── engine/
 │   ├── rules/
