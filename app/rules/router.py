@@ -1,5 +1,7 @@
 """Rule Management & Persistence API — owned by Contributor B."""
 
+# ruff: noqa: B008 — FastAPI Depends() in defaults is intentional
+
 from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 

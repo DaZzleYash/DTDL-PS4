@@ -1,7 +1,7 @@
 """Rule business logic — owned by Contributor B."""
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy.orm import Session
 
@@ -48,14 +48,14 @@ class RuleService:
         rule.decision_outcome = payload.decision_outcome
         rule.decision_metadata_json = self._serialize_metadata(payload.decision_metadata)
         rule.version += 1
-        rule.updated_at = datetime.now(timezone.utc)
+        rule.updated_at = datetime.now(UTC)
         return self._to_out(self._repo.update(rule))
 
     def set_active(self, rule_id: int, active: bool) -> RuleOut:
         rule = self._get_or_raise(rule_id)
         rule.active = active
         rule.version += 1
-        rule.updated_at = datetime.now(timezone.utc)
+        rule.updated_at = datetime.now(UTC)
         return self._to_out(self._repo.update(rule))
 
     def delete(self, rule_id: int) -> None:
