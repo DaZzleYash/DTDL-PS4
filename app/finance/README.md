@@ -1,14 +1,32 @@
-"""
-Finance Domain & Demo Content — owned by Contributor D.
+# Module D — Finance Domain & Demo Content
 
-Depends on: Module B (RuleService), Module C (request/response shapes).
+Owned by **Contributor D**.
 
-Deliverables:
-  - app/finance/schemas.py          LoanApplicationContext
-  - app/finance/seed_rules.py       CLI to seed example rules
-  - app/finance/sample_requests.py  demo loan payloads
-  - app/finance/rule_catalog.md     plain-English rule descriptions
+Depends on: Module B (`RuleService`), Module C (request/response shapes from §5).
 
-Branch: feat/finance-domain
-Tests:  tests/finance/
-"""
+## Deliverables
+
+| File | Purpose |
+|---|---|
+| `app/finance/schemas.py` | `LoanApplicationContext` documentation model |
+| `app/finance/seed_rules.py` | CLI to insert 5 example rules (`python -m app.finance.seed_rules`) |
+| `app/finance/sample_requests.py` | Demo loan payloads + expected decisions |
+| `app/finance/rule_catalog.md` | Plain-English description of each seeded rule |
+
+## Branch / commits
+
+Branch: `feat/finance-domain`
+
+1. `feat(finance): LoanApplicationContext documentation schema`
+2. `feat(finance): seed_rules script with 5 example rules`
+3. `feat(finance): sample_requests + rule_catalog.md`
+4. `test(finance): sample payloads produce expected decisions`
+
+## Run
+
+```bash
+# after alembic upgrade head (and preferably with the API up)
+python -m app.finance.seed_rules
+
+pytest tests/finance
+```
