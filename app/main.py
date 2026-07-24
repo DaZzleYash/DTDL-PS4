@@ -97,10 +97,10 @@ async def health_check() -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Router wiring — rules (B); decisions (C) pending Phase 2 integration
+# Router wiring — rules (B), decisions (C)
 # ---------------------------------------------------------------------------
+from app.decisions.router import router as decisions_router
 from app.rules.router import router as rules_router
 
 app.include_router(rules_router)
-# from app.decisions.router import router as decisions_router
-# app.include_router(decisions_router)
+app.include_router(decisions_router)
