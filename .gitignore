@@ -27,6 +27,7 @@ data/
 .pytest_cache/
 .coverage
 htmlcov/
+reports/
 
 # Frontend
 frontend/
