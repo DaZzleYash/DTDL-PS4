@@ -1,0 +1,16 @@
+{
+  // POST /api/rules/ — FRAUD category example
+  "name": "Prior Default Block",
+  "description": "Reject applicants who have previously defaulted.",
+  "category": "FRAUD",
+  "priority": 30,
+  "active": true,
+  "condition": {
+    "type": "BOOLEAN",
+    "field": "risk_flags.hasDefaulted",
+    "operator": "EQUALS",
+    "value": true
+  },
+  "decision_outcome": "REJECT",
+  "decision_metadata": { "reason": "prior_default" }
+}

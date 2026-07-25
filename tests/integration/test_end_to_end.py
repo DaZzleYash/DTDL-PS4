@@ -48,7 +48,7 @@ def test_seeded_rules_are_listed(seeded_client: TestClient) -> None:
     response = seeded_client.get("/api/rules/")
     assert response.status_code == 200
     rules = response.json()
-    assert len(rules) == 5
+    assert len(rules) == 7
     names = {rule["name"] for rule in rules}
     assert "Minimum Credit Score" in names
     assert "Prior Default Block" in names
@@ -67,7 +67,7 @@ def test_evaluate_sample_loan_payload(
     assert body["final_decision"] == EXPECTED_DECISIONS[scenario]
     matched_names = {trace["rule_name"] for trace in body["rules_matched"]}
     assert EXPECTED_MATCHED_RULE_NAMES[scenario] <= matched_names
-    assert len(body["rules_evaluated"]) == 5
+    assert len(body["rules_evaluated"]) == 7
     assert body["explanation"]
     assert body["evaluated_at"]
 
@@ -96,7 +96,7 @@ def test_no_match_returns_no_decision(seeded_client: TestClient) -> None:
     body = response.json()
     assert body["final_decision"] == "NO_DECISION"
     assert body["rules_matched"] == []
-    assert len(body["rules_rejected"]) == 5
+    assert len(body["rules_rejected"]) == 7
 
 
 def test_unknown_condition_type_returns_400(seeded_client: TestClient) -> None:

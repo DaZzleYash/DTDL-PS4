@@ -1,0 +1,21 @@
+{
+  "context": {
+    "applicant": {
+      "creditScore": 600,
+      "annualIncome": 85000,
+      "employmentStatus": "EMPLOYED",
+      "dateOfBirth": "1996-01-15",
+      "existingCustomer": false
+    },
+    "loan": {
+      "amount": 150000,
+      "purpose": "HOME",
+      "termMonths": 240
+    },
+    "risk_flags": {
+      "hasDefaulted": false,
+      "debtToIncomeRatio": 0.30
+    }
+  },
+  "category": null
+}

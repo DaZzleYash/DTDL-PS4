@@ -49,3 +49,21 @@ eighteen years before seed time (i.e. they are under 18). The cutoff date is
 computed when `seed_rules` runs, so re-seeding on a later day keeps the rule
 current. Demo payloads use a 16-year-old DOB and a sub-650 credit score so
 this rule is the first match.
+
+## 6. Unemployed Applicant Block
+
+**Category:** ELIGIBILITY · **Priority:** 35 · **Outcome:** REJECT
+
+Rejects applicants whose `applicant.employmentStatus` equals `UNEMPLOYED`.
+Uses a **STRING** condition (the other seeded rules use NUMERIC, BOOLEAN, DATE,
+or AND). Demo payloads use credit score below 650 and no prior default so this
+rule wins `final_decision` before Underage Applicant Block (priority 40).
+
+## 7. Large Loan Manual Review
+
+**Category:** RISK · **Priority:** 15 · **Outcome:** MANUAL_REVIEW
+
+Flags applications where `loan.amount` is greater than $100,000. Uses the
+**loan** section of the context (not applicant or risk_flags). Demo payloads
+use credit score below 650 and normal DTI so this rule wins before High
+Debt-to-Income Flag (priority 20).

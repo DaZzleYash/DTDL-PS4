@@ -9,9 +9,11 @@ Depends on: Module B (`RuleService`), Module C (request/response shapes from §5
 | File | Purpose |
 |---|---|
 | `app/finance/schemas.py` | `LoanApplicationContext` documentation model |
-| `app/finance/seed_rules.py` | CLI to insert 5 example rules (`python -m app.finance.seed_rules`) |
+| `app/finance/seed_rules.py` | CLI to insert 7 example rules (`python -m app.finance.seed_rules`) |
 | `app/finance/sample_requests.py` | Demo loan payloads + expected decisions |
 | `app/finance/rule_catalog.md` | Plain-English description of each seeded rule |
+| `docs/API_AND_RULE_EXAMPLES.md` | Category-wise rules, request/response examples, JSON reference |
+| `docs/examples/` | Copy-paste JSON/JSONC payloads for curl and Postman |
 
 ## Branch / commits
 

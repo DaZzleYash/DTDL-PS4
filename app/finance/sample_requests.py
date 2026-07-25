@@ -60,6 +60,12 @@ MANUAL_REVIEW_HIGH_DTI = {
     "risk_flags": _base_risk(debtToIncomeRatio=0.55),
 }
 
+MANUAL_REVIEW_LARGE_LOAN = {
+    "applicant": _base_applicant(creditScore=600),
+    "loan": _base_loan(amount=150000, purpose="HOME", termMonths=240),
+    "risk_flags": _base_risk(debtToIncomeRatio=0.30),
+}
+
 REJECT_PRIOR_DEFAULT = {
     "applicant": _base_applicant(creditScore=600),
     "loan": _base_loan(purpose="PERSONAL"),
@@ -70,6 +76,12 @@ REJECT_UNDERAGE = {
     "applicant": _base_applicant(creditScore=600, dateOfBirth=_years_ago(16)),
     "loan": _base_loan(amount=5000, purpose="EDUCATION", termMonths=24),
     "risk_flags": _base_risk(),
+}
+
+REJECT_UNEMPLOYED = {
+    "applicant": _base_applicant(creditScore=600, employmentStatus="UNEMPLOYED"),
+    "loan": _base_loan(amount=10000, purpose="PERSONAL"),
+    "risk_flags": _base_risk(debtToIncomeRatio=0.20),
 }
 
 APPROVE_VIP_CUSTOMER = {
@@ -88,12 +100,20 @@ SAMPLE_REQUESTS: dict[str, dict] = {
         "context": MANUAL_REVIEW_HIGH_DTI,
         "category": None,
     },
+    "manual_review_large_loan": {
+        "context": MANUAL_REVIEW_LARGE_LOAN,
+        "category": None,
+    },
     "reject_prior_default": {
         "context": REJECT_PRIOR_DEFAULT,
         "category": None,
     },
     "reject_underage": {
         "context": REJECT_UNDERAGE,
+        "category": None,
+    },
+    "reject_unemployed": {
+        "context": REJECT_UNEMPLOYED,
         "category": None,
     },
     "approve_vip_customer": {
@@ -106,8 +126,10 @@ SAMPLE_REQUESTS: dict[str, dict] = {
 EXPECTED_DECISIONS: dict[str, str] = {
     "approve_good_applicant": "APPROVE",
     "manual_review_high_dti": "MANUAL_REVIEW",
+    "manual_review_large_loan": "MANUAL_REVIEW",
     "reject_prior_default": "REJECT",
     "reject_underage": "REJECT",
+    "reject_unemployed": "REJECT",
     "approve_vip_customer": "APPROVE",
 }
 
@@ -115,7 +137,9 @@ EXPECTED_DECISIONS: dict[str, str] = {
 EXPECTED_MATCHED_RULE_NAMES: dict[str, set[str]] = {
     "approve_good_applicant": {"Minimum Credit Score"},
     "manual_review_high_dti": {"High Debt-to-Income Flag"},
+    "manual_review_large_loan": {"Large Loan Manual Review"},
     "reject_prior_default": {"Prior Default Block"},
     "reject_underage": {"Underage Applicant Block"},
+    "reject_unemployed": {"Unemployed Applicant Block"},
     "approve_vip_customer": {"Minimum Credit Score", "VIP Existing Customer Fast Track"},
 }

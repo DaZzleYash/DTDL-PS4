@@ -1,0 +1,32 @@
+{
+  // Example response from POST /api/decisions/evaluate (good applicant)
+  // HTTP 200 — fields explained inline
+
+  "final_decision": "APPROVE",
+  "matched_decisions": ["APPROVE"],
+  "explanation": "Final decision: APPROVE (highest-priority match: 'Minimum Credit Score', priority 10).",
+
+  "rules_matched": [
+    {
+      "rule_id": 1,
+      "rule_name": "Minimum Credit Score",
+      "priority": 10,
+      "matched": true,
+      "decision_outcome": "APPROVE",
+      "explanation": "applicant.creditScore (720.0) >= 650.0 — matched"
+    }
+  ],
+
+  "rules_rejected": [
+    {
+      "rule_name": "High Debt-to-Income Flag",
+      "priority": 20,
+      "matched": false,
+      "decision_outcome": null,
+      "explanation": "risk_flags.debtToIncomeRatio (0.3) > 0.45 — not matched"
+    }
+  ],
+
+  "rules_evaluated": [],
+  "evaluated_at": "2026-07-25T02:00:00+00:00"
+}

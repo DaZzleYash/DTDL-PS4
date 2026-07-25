@@ -35,7 +35,7 @@ def db_session() -> Generator[Session, None, None]:
 def seeded_client(db_session: Session) -> Generator[TestClient, None, None]:
     """HTTP client backed by in-memory SQLite with finance rules seeded."""
     created = seed_rules(db_session)
-    assert len(created) == 5
+    assert len(created) == 7
 
     def override_get_db() -> Generator[Session, None, None]:
         try:

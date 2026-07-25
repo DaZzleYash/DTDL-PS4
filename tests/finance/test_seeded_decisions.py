@@ -25,20 +25,24 @@ def test_loan_application_context_documents_expected_shape() -> None:
     assert ctx.loan.purpose == "AUTO"
 
 
-def test_build_example_rules_has_five_named_rules() -> None:
+def test_build_example_rules_has_seven_named_rules() -> None:
     rules = build_example_rules()
     names = [rule.name for rule in rules]
     assert names == [
         "Minimum Credit Score",
+        "Large Loan Manual Review",
         "High Debt-to-Income Flag",
         "VIP Existing Customer Fast Track",
         "Prior Default Block",
+        "Unemployed Applicant Block",
         "Underage Applicant Block",
     ]
     assert [rule.decision_outcome for rule in rules] == [
         "APPROVE",
         "MANUAL_REVIEW",
+        "MANUAL_REVIEW",
         "APPROVE",
+        "REJECT",
         "REJECT",
         "REJECT",
     ]
@@ -47,9 +51,11 @@ def test_build_example_rules_has_five_named_rules() -> None:
 def test_seed_rules_is_idempotent(db_session) -> None:
     assert seed_rules(db_session) == [
         "Minimum Credit Score",
+        "Large Loan Manual Review",
         "High Debt-to-Income Flag",
         "VIP Existing Customer Fast Track",
         "Prior Default Block",
+        "Unemployed Applicant Block",
         "Underage Applicant Block",
     ]
     assert seed_rules(db_session) == []

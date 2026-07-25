@@ -1,0 +1,43 @@
+{
+  // Reference for rule condition JSON stored in the database.
+  // Each rule has ONE condition object (or AND tree).
+
+  "NUMERIC_example": {
+    "type": "NUMERIC",
+    "field": "applicant.creditScore",  // dot path into context
+    "operator": "GTE",                // GT | GTE | LT | LTE | EQ
+    "value": 650
+  },
+
+  "BOOLEAN_example": {
+    "type": "BOOLEAN",
+    "field": "risk_flags.hasDefaulted",
+    "operator": "EQUALS",
+    "value": true
+  },
+
+  "DATE_example": {
+    "type": "DATE",
+    "field": "applicant.dateOfBirth",
+    "operator": "AFTER",              // BEFORE | AFTER | EQUALS | ON_OR_BEFORE | ON_OR_AFTER
+    "value": "2008-07-25"
+  },
+
+  "AND_example": {
+    "type": "AND",                    // all nested conditions must match
+    "conditions": [
+      {
+        "type": "BOOLEAN",
+        "field": "applicant.existingCustomer",
+        "operator": "EQUALS",
+        "value": true
+      },
+      {
+        "type": "NUMERIC",
+        "field": "applicant.creditScore",
+        "operator": "GTE",
+        "value": 700
+      }
+    ]
+  }
+}

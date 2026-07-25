@@ -263,9 +263,9 @@ def run_jury_demo_cases() -> list[CaseResult]:
         record(
             "Rules (B)",
             "List seeded finance rules",
-            "Five demo rules loaded for jury scenarios",
-            r.status_code == 200 and len(rules) == 5,
-            expected="5 rules",
+            "Seven demo rules loaded for jury scenarios",
+            r.status_code == 200 and len(rules) == 7,
+            expected="7 rules",
             actual=f"{len(rules)} rules",
             duration_ms=(perf_counter() - t0) * 1000,
         )

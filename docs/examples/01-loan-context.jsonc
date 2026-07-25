@@ -1,0 +1,23 @@
+{
+  // Loan application context — sent inside EvaluateRequest.context
+  // POST /api/decisions/evaluate
+
+  "applicant": {
+    "creditScore": 720,              // FICO-style score (ELIGIBILITY rules)
+    "annualIncome": 85000,
+    "employmentStatus": "EMPLOYED",  // EMPLOYED | SELF_EMPLOYED | UNEMPLOYED
+    "dateOfBirth": "1996-07-25",     // ISO-8601 date
+    "existingCustomer": false        // true + score>=700 triggers VIP rule
+  },
+
+  "loan": {
+    "amount": 25000,
+    "purpose": "AUTO",               // AUTO | HOME | PERSONAL | EDUCATION
+    "termMonths": 60
+  },
+
+  "risk_flags": {
+    "hasDefaulted": false,           // true -> FRAUD reject
+    "debtToIncomeRatio": 0.30        // > 0.45 -> RISK manual review
+  }
+}

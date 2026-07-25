@@ -1,0 +1,509 @@
+{
+  "info": {
+    "_postman_id": "752324da-9863-46b0-b19e-fb55e6150f10",
+    "name": "Finance Decision Engine (DTDL-PS4)",
+    "description": "Complete API collection for the Finance Decision Engine hackathon project.\\n\\n**Setup:**\\n1. Start backend: uvicorn app.main:app --reload (port 8000)\\n2. Seed demo rules: python -m app.finance.seed_rules\\n3. Import this collection in Postman\\n4. Variable \baseUrl defaults to http://localhost:8000\\n\\nSee docs/API_AND_RULE_EXAMPLES.md for detailed explanations.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "ruleId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Health & Docs",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health",
+            "description": "Returns API status, environment, and timestamp."
+          }
+        },
+        {
+          "name": "OpenAPI Spec",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/openapi.json",
+            "description": "Machine-readable API specification."
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Rules (CRUD)",
+      "item": [
+        {
+          "name": "List All Rules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/rules/",
+            "description": "GET all rules ordered by priority."
+          }
+        },
+        {
+          "name": "List ELIGIBILITY Rules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/rules/?category=ELIGIBILITY",
+            "description": "Filter rules by category=ELIGIBILITY."
+          }
+        },
+        {
+          "name": "List RISK Rules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/rules/?category=RISK",
+            "description": "Filter rules by category=RISK."
+          }
+        },
+        {
+          "name": "List FRAUD Rules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/rules/?category=FRAUD",
+            "description": "Filter rules by category=FRAUD."
+          }
+        },
+        {
+          "name": "Get Rule by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/rules/{{ruleId}}",
+            "description": "Replace ruleId variable with an existing rule id."
+          }
+        },
+        {
+          "name": "Create Rule - ELIGIBILITY (Credit Score)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/rules/",
+            "description": "Category ELIGIBILITY. Expected outcome: APPROVE when creditScore >= 650.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Minimum Credit Score\",\n  \"description\": \"Approve applicants whose credit score is at least 650.\",\n  \"category\": \"ELIGIBILITY\",\n  \"priority\": 10,\n  \"active\": true,\n  \"condition\": {\n    \"type\": \"NUMERIC\",\n    \"field\": \"applicant.creditScore\",\n    \"operator\": \"GTE\",\n    \"value\": 650\n  },\n  \"decision_outcome\": \"APPROVE\",\n  \"decision_metadata\": {\n    \"riskTier\": \"A\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create Rule - ELIGIBILITY (VIP AND)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/rules/",
+            "description": "Category ELIGIBILITY with AND condition (existing customer + score 700+).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"VIP Existing Customer Fast Track\",\n  \"description\": \"Fast-track existing customers with credit score 700+.\",\n  \"category\": \"ELIGIBILITY\",\n  \"priority\": 25,\n  \"active\": true,\n  \"condition\": {\n    \"type\": \"AND\",\n    \"conditions\": [\n      {\n        \"type\": \"BOOLEAN\",\n        \"field\": \"applicant.existingCustomer\",\n        \"operator\": \"EQUALS\",\n        \"value\": true\n      },\n      {\n        \"type\": \"NUMERIC\",\n        \"field\": \"applicant.creditScore\",\n        \"operator\": \"GTE\",\n        \"value\": 700\n      }\n    ]\n  },\n  \"decision_outcome\": \"APPROVE\",\n  \"decision_metadata\": {\n    \"fastTrack\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create Rule - ELIGIBILITY (Underage DATE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/rules/",
+            "description": "Category ELIGIBILITY with DATE condition. Rejects under-18 applicants.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Underage Applicant Block\",\n  \"description\": \"Reject applicants under 18 years old.\",\n  \"category\": \"ELIGIBILITY\",\n  \"priority\": 40,\n  \"active\": true,\n  \"condition\": {\n    \"type\": \"DATE\",\n    \"field\": \"applicant.dateOfBirth\",\n    \"operator\": \"AFTER\",\n    \"value\": \"2008-07-25\"\n  },\n  \"decision_outcome\": \"REJECT\",\n  \"decision_metadata\": {\n    \"reason\": \"underage\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create Rule - RISK (High DTI)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/rules/",
+            "description": "Category RISK. Expected outcome: MANUAL_REVIEW when DTI > 0.45.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"High Debt-to-Income Flag\",\n  \"description\": \"Flag applications where DTI exceeds 45% for manual review.\",\n  \"category\": \"RISK\",\n  \"priority\": 20,\n  \"active\": true,\n  \"condition\": {\n    \"type\": \"NUMERIC\",\n    \"field\": \"risk_flags.debtToIncomeRatio\",\n    \"operator\": \"GT\",\n    \"value\": 0.45\n  },\n  \"decision_outcome\": \"MANUAL_REVIEW\",\n  \"decision_metadata\": {\n    \"reason\": \"high_dti\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create Rule - FRAUD (Prior Default)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/rules/",
+            "description": "Category FRAUD. Expected outcome: REJECT when hasDefaulted=true.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Prior Default Block\",\n  \"description\": \"Reject applicants who have previously defaulted.\",\n  \"category\": \"FRAUD\",\n  \"priority\": 30,\n  \"active\": true,\n  \"condition\": {\n    \"type\": \"BOOLEAN\",\n    \"field\": \"risk_flags.hasDefaulted\",\n    \"operator\": \"EQUALS\",\n    \"value\": true\n  },\n  \"decision_outcome\": \"REJECT\",\n  \"decision_metadata\": {\n    \"reason\": \"prior_default\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Rule",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/rules/{{ruleId}}",
+            "description": "Full replace of a rule. Set ruleId first.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Minimum Credit Score (Updated)\",\n  \"description\": \"Approve applicants whose credit score is at least 650.\",\n  \"category\": \"ELIGIBILITY\",\n  \"priority\": 11,\n  \"active\": true,\n  \"condition\": {\n    \"type\": \"NUMERIC\",\n    \"field\": \"applicant.creditScore\",\n    \"operator\": \"GTE\",\n    \"value\": 650\n  },\n  \"decision_outcome\": \"APPROVE\",\n  \"decision_metadata\": {\n    \"riskTier\": \"A\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Deactivate Rule",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/rules/{{ruleId}}/active",
+            "description": "Toggle rule active flag without deleting.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"active\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Activate Rule",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/rules/{{ruleId}}/active",
+            "description": "Re-enable a deactivated rule.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete Rule",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/rules/{{ruleId}}",
+            "description": "Permanently delete a rule by id."
+          }
+        },
+        {
+          "name": "Create Invalid Rule (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/rules/",
+            "description": "Returns HTTP 400 - unknown condition type UNKNOWN.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bad Rule\",\n  \"priority\": 1,\n  \"active\": true,\n  \"condition\": {\n    \"type\": \"UNKNOWN\"\n  },\n  \"decision_outcome\": \"REJECT\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Missing Rule (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/rules/99999",
+            "description": "Returns HTTP 404 for unknown rule id."
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Decisions (Evaluate)",
+      "item": [
+        {
+          "name": "Evaluate - APPROVE (Good Applicant)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/decisions/evaluate",
+            "description": "Expected final_decision: APPROVE. Matches Minimum Credit Score (priority 10).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"applicant\": {\n      \"creditScore\": 720,\n      \"annualIncome\": 85000,\n      \"employmentStatus\": \"EMPLOYED\",\n      \"dateOfBirth\": \"1996-07-25\",\n      \"existingCustomer\": false\n    },\n    \"loan\": {\n      \"amount\": 25000,\n      \"purpose\": \"AUTO\",\n      \"termMonths\": 60\n    },\n    \"risk_flags\": {\n      \"hasDefaulted\": false,\n      \"debtToIncomeRatio\": 0.3\n    }\n  },\n  \"category\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Evaluate - MANUAL_REVIEW (High DTI)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/decisions/evaluate",
+            "description": "Expected final_decision: MANUAL_REVIEW. Credit score 600 avoids ELIGIBILITY approve winning first.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"applicant\": {\n      \"creditScore\": 600,\n      \"annualIncome\": 85000,\n      \"employmentStatus\": \"EMPLOYED\",\n      \"dateOfBirth\": \"1996-07-25\",\n      \"existingCustomer\": false\n    },\n    \"loan\": {\n      \"amount\": 40000,\n      \"purpose\": \"PERSONAL\",\n      \"termMonths\": 60\n    },\n    \"risk_flags\": {\n      \"hasDefaulted\": false,\n      \"debtToIncomeRatio\": 0.55\n    }\n  },\n  \"category\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Evaluate - REJECT (Prior Default)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/decisions/evaluate",
+            "description": "Expected final_decision: REJECT. Matches Prior Default Block (FRAUD).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"applicant\": {\n      \"creditScore\": 600,\n      \"annualIncome\": 85000,\n      \"employmentStatus\": \"EMPLOYED\",\n      \"dateOfBirth\": \"1996-07-25\",\n      \"existingCustomer\": false\n    },\n    \"loan\": {\n      \"amount\": 25000,\n      \"purpose\": \"PERSONAL\",\n      \"termMonths\": 60\n    },\n    \"risk_flags\": {\n      \"hasDefaulted\": true,\n      \"debtToIncomeRatio\": 0.3\n    }\n  },\n  \"category\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Evaluate - REJECT (Underage)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/decisions/evaluate",
+            "description": "Expected final_decision: REJECT. Applicant DOB 2010-07-25 (under 18).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"applicant\": {\n      \"creditScore\": 600,\n      \"annualIncome\": 85000,\n      \"employmentStatus\": \"EMPLOYED\",\n      \"dateOfBirth\": \"2010-07-25\",\n      \"existingCustomer\": false\n    },\n    \"loan\": {\n      \"amount\": 5000,\n      \"purpose\": \"EDUCATION\",\n      \"termMonths\": 24\n    },\n    \"risk_flags\": {\n      \"hasDefaulted\": false,\n      \"debtToIncomeRatio\": 0.3\n    }\n  },\n  \"category\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Evaluate - APPROVE (VIP Customer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/decisions/evaluate",
+            "description": "Expected final_decision: APPROVE. Matches Minimum Credit Score; VIP rule also in rules_matched.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"applicant\": {\n      \"creditScore\": 750,\n      \"annualIncome\": 85000,\n      \"employmentStatus\": \"EMPLOYED\",\n      \"dateOfBirth\": \"1996-07-25\",\n      \"existingCustomer\": true\n    },\n    \"loan\": {\n      \"amount\": 50000,\n      \"purpose\": \"HOME\",\n      \"termMonths\": 120\n    },\n    \"risk_flags\": {\n      \"hasDefaulted\": false,\n      \"debtToIncomeRatio\": 0.28\n    }\n  },\n  \"category\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Evaluate - NO_DECISION",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/decisions/evaluate",
+            "description": "Expected final_decision: NO_DECISION. No rules match credit score 400.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"applicant\": {\n      \"creditScore\": 400\n    },\n    \"loan\": {\n      \"amount\": 1000\n    },\n    \"risk_flags\": {\n      \"hasDefaulted\": false,\n      \"debtToIncomeRatio\": 0.1\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Evaluate - Category Filter ELIGIBILITY",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/decisions/evaluate",
+            "description": "Only ELIGIBILITY rules evaluated. RISK/FRAUD rules skipped even if context would match.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"applicant\": {\n      \"creditScore\": 600,\n      \"dateOfBirth\": \"1996-07-25\",\n      \"existingCustomer\": false\n    },\n    \"risk_flags\": {\n      \"hasDefaulted\": true,\n      \"debtToIncomeRatio\": 0.55\n    }\n  },\n  \"category\": \"ELIGIBILITY\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Bulk Evaluate (3 applications)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/decisions/evaluate/bulk",
+            "description": "Array of evaluate requests. Returns array of DecisionResponse in same order.",
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"context\": {\n      \"applicant\": {\n        \"creditScore\": 720,\n        \"annualIncome\": 85000,\n        \"employmentStatus\": \"EMPLOYED\",\n        \"dateOfBirth\": \"1996-07-25\",\n        \"existingCustomer\": false\n      },\n      \"loan\": {\n        \"amount\": 25000,\n        \"purpose\": \"AUTO\",\n        \"termMonths\": 60\n      },\n      \"risk_flags\": {\n        \"hasDefaulted\": false,\n        \"debtToIncomeRatio\": 0.3\n      }\n    }\n  },\n  {\n    \"context\": {\n      \"applicant\": {\n        \"creditScore\": 600,\n        \"annualIncome\": 85000,\n        \"employmentStatus\": \"EMPLOYED\",\n        \"dateOfBirth\": \"1996-07-25\",\n        \"existingCustomer\": false\n      },\n      \"loan\": {\n        \"amount\": 40000,\n        \"purpose\": \"PERSONAL\",\n        \"termMonths\": 60\n      },\n      \"risk_flags\": {\n        \"hasDefaulted\": false,\n        \"debtToIncomeRatio\": 0.55\n      }\n    }\n  },\n  {\n    \"context\": {\n      \"applicant\": {\n        \"creditScore\": 600,\n        \"annualIncome\": 85000,\n        \"employmentStatus\": \"EMPLOYED\",\n        \"dateOfBirth\": \"1996-07-25\",\n        \"existingCustomer\": false\n      },\n      \"loan\": {\n        \"amount\": 25000,\n        \"purpose\": \"PERSONAL\",\n        \"termMonths\": 60\n      },\n      \"risk_flags\": {\n        \"hasDefaulted\": true,\n        \"debtToIncomeRatio\": 0.3\n      }\n    }\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

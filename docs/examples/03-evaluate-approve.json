@@ -1,0 +1,21 @@
+{
+  "context": {
+    "applicant": {
+      "creditScore": 720,
+      "annualIncome": 85000,
+      "employmentStatus": "EMPLOYED",
+      "dateOfBirth": "1996-07-25",
+      "existingCustomer": false
+    },
+    "loan": {
+      "amount": 25000,
+      "purpose": "AUTO",
+      "termMonths": 60
+    },
+    "risk_flags": {
+      "hasDefaulted": false,
+      "debtToIncomeRatio": 0.30
+    }
+  },
+  "category": null
+}

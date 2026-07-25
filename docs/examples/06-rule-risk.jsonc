@@ -1,0 +1,16 @@
+{
+  // POST /api/rules/ — RISK category example
+  "name": "High Debt-to-Income Flag",
+  "description": "Flag applications where DTI exceeds 45% for manual review.",
+  "category": "RISK",
+  "priority": 20,
+  "active": true,
+  "condition": {
+    "type": "NUMERIC",
+    "field": "risk_flags.debtToIncomeRatio",
+    "operator": "GT",
+    "value": 0.45
+  },
+  "decision_outcome": "MANUAL_REVIEW",
+  "decision_metadata": { "reason": "high_dti" }
+}

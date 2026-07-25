@@ -1,0 +1,16 @@
+{
+  // POST /api/rules/ — ELIGIBILITY category example
+  "name": "Minimum Credit Score",
+  "description": "Approve applicants whose credit score is at least 650.",
+  "category": "ELIGIBILITY",
+  "priority": 10,
+  "active": true,
+  "condition": {
+    "type": "NUMERIC",
+    "field": "applicant.creditScore",
+    "operator": "GTE",
+    "value": 650
+  },
+  "decision_outcome": "APPROVE",
+  "decision_metadata": { "riskTier": "A" }
+}

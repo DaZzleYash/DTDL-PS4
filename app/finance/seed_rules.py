@@ -29,7 +29,7 @@ def _years_ago(years: int) -> str:
 
 
 def build_example_rules() -> list[RuleCreate]:
-    """Return the 5 demo rules. Underage cutoff is computed at call time."""
+    """Return the 7 demo rules. Underage cutoff is computed at call time."""
     adult_cutoff = _years_ago(18)
     return [
         RuleCreate(
@@ -46,6 +46,21 @@ def build_example_rules() -> list[RuleCreate]:
             },
             decision_outcome="APPROVE",
             decision_metadata={"riskTier": "A"},
+        ),
+        RuleCreate(
+            name="Large Loan Manual Review",
+            description="Flag loan requests over $100,000 for manual underwriter review.",
+            category="RISK",
+            priority=15,
+            active=True,
+            condition={
+                "type": "NUMERIC",
+                "field": "loan.amount",
+                "operator": "GT",
+                "value": 100000,
+            },
+            decision_outcome="MANUAL_REVIEW",
+            decision_metadata={"reason": "large_loan"},
         ),
         RuleCreate(
             name="High Debt-to-Income Flag",
@@ -102,6 +117,21 @@ def build_example_rules() -> list[RuleCreate]:
             },
             decision_outcome="REJECT",
             decision_metadata={"reason": "prior_default"},
+        ),
+        RuleCreate(
+            name="Unemployed Applicant Block",
+            description="Reject applications where the applicant is unemployed.",
+            category="ELIGIBILITY",
+            priority=35,
+            active=True,
+            condition={
+                "type": "STRING",
+                "field": "applicant.employmentStatus",
+                "operator": "EQUALS",
+                "value": "UNEMPLOYED",
+            },
+            decision_outcome="REJECT",
+            decision_metadata={"reason": "unemployed"},
         ),
         RuleCreate(
             name="Underage Applicant Block",

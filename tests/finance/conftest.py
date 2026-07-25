@@ -34,5 +34,5 @@ def db_session() -> Generator[Session, None, None]:
 @pytest.fixture
 def seeded_decision_service(db_session: Session) -> DecisionEngineService:
     created = seed_rules(db_session)
-    assert len(created) == 5
+    assert len(created) == 7
     return DecisionEngineService(RuleRepository(db_session))
