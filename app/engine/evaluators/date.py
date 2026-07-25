@@ -60,7 +60,7 @@ def _parse_date(value: object) -> date:
     if isinstance(value, datetime):
         return value.date()
     if not isinstance(value, str):
-        raise ValueError("unsupported date value")
+        raise TypeError("unsupported date value")
     normalized = value.replace("Z", "+00:00")
     if "T" in normalized:
         return datetime.fromisoformat(normalized).date()

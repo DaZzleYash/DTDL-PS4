@@ -7,7 +7,7 @@ Usage:
 from __future__ import annotations
 
 import logging
-from datetime import date
+from datetime import UTC, datetime
 
 from sqlalchemy.orm import Session
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 def _years_ago(years: int) -> str:
     """Return an ISO-8601 date `years` before today (handles Feb 29)."""
-    today = date.today()
+    today = datetime.now(UTC).date()
     try:
         cutoff = today.replace(year=today.year - years)
     except ValueError:
